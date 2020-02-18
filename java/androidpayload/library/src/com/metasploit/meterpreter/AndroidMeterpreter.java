@@ -10,6 +10,7 @@ import com.metasploit.meterpreter.android.stdapi_ui_desktop_screenshot;
 import com.metasploit.meterpreter.stdapi.*;
 
 import com.metasploit.stage.Config;
+import com.metasploit.stage.MyApplication;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -26,36 +27,48 @@ public class AndroidMeterpreter extends Meterpreter {
     private final IntervalCollectionManager intervalCollectionManager;
     private ClipManager clipManager;
 
-    private void findContext() throws Exception {
-        Class<?> activityThreadClass;
+//    private void findContext() throws Exception {
+//        Class<?> activityThreadClass;
+//        try {
+//            activityThreadClass = Class.forName("android.app.ActivityThread");
+//        } catch (ClassNotFoundException e) {
+//            // No context (running as root?)
+//            return;
+//        }
+//        final Method currentApplication = activityThreadClass.getMethod("currentApplication");
+//        context = (Context) currentApplication.invoke(null, (Object[]) null);
+//        if (context == null) {
+//            // Post to the UI/Main thread and try and retrieve the Context
+//            final Handler handler = new Handler(Looper.getMainLooper());
+//            handler.post(new Runnable() {
+//                public void run() {
+//                    synchronized (contextWaiter) {
+//                        try {
+//                            context = (Context) currentApplication.invoke(null, (Object[]) null);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        contextWaiter.notify();
+//                    }
+//                }
+//            });
+//            synchronized (contextWaiter) {
+//                if (context == null) {
+//                    contextWaiter.wait(100);
+//                }
+//            }
+//        }
+//
+//
+//    }
+
+    private static void findContext() throws Exception{
+
         try {
-            activityThreadClass = Class.forName("android.app.ActivityThread");
-        } catch (ClassNotFoundException e) {
-            // No context (running as root?)
-            return;
-        }
-        final Method currentApplication = activityThreadClass.getMethod("currentApplication");
-        context = (Context) currentApplication.invoke(null, (Object[]) null);
-        if (context == null) {
-            // Post to the UI/Main thread and try and retrieve the Context
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                public void run() {
-                    synchronized (contextWaiter) {
-                        try {
-                            context = (Context) currentApplication.invoke(null, (Object[]) null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        contextWaiter.notify();
-                    }
-                }
-            });
-            synchronized (contextWaiter) {
-                if (context == null) {
-                    contextWaiter.wait(100);
-                }
-            }
+            Context context=  MyApplication.getAppContext();
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
